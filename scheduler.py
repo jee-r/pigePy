@@ -12,10 +12,10 @@ class Scheduler:
     Scheduler is running as a blocking process
     """
 
-    def __init__(self):
+    def __init__(self, timezone):
 
         #self.scheduler = BackgroundScheduler(daemon=False)
-        self.scheduler = BlockingScheduler(daemon=False)
+        self.scheduler = BlockingScheduler(daemon=False, timezone=timezone)
         #self.scheduler.add_listener(self.listener, EVENT_ALL)
 
     def start(self):

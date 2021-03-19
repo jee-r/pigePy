@@ -12,7 +12,7 @@ def main():
     args = config.parser.parse_args()
 
     """Scheduler"""
-    scheduler = Scheduler()
+    scheduler = Scheduler(args.schedulerTimezone)
 
     recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat)
 
