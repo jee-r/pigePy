@@ -115,7 +115,7 @@ class Recorder():
 
             """Kill old futures object"""
             if self.writeFile_executor_old:
-                self.writeFile_executor_old.shutdown(wait=False, cancel_futures=True)
+                self.writeFile_executor_old.shutdown(wait=False)
             return
 
     def threadStatus(self):
