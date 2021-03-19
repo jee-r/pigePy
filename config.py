@@ -15,6 +15,7 @@ class Config:
         self.dirFormat = self.parser.add_argument('--directory-format', '-df', dest="directoryFormat", default='%Y/%m/%d', help='sub directories structure in strftime format (default: "%%Y/%%m/%%d")')
         self.fileFormat = self.parser.add_argument('--file-format', '-ff', dest="filenameFormat", default="%Hh-%Mm-%Ss", help='filename format can contain strftime format (default: "%%Hh-%%Mm-%%Ss")')
         self.interval = self.parser.add_argument('--interval', '-i', dest="interval", default={"minutes": 60}, type=self.interval_validation, help='Audio files length kwargs format (default: {"minutes": 60})')
+        self.createdir_delta = self.parser.add_argument('--directory-delta', '-dd', dest="directoryDelta", default={"days": 1}, type=self.interval_validation, help='directory creating delta, kwargs format (default: {"days": 1})')
 
     def verify_dir(self, dirPath):
         directory = Path(dirPath)

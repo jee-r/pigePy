@@ -19,7 +19,7 @@ def main():
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), id="recorder_writeFile_init", max_instances=2)
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, max_instances=2, replace_existing=True, id="recorder_writeFile")
 
-    filemanager = FileManager(args.basePath, args.directoryFormat)
+    filemanager = FileManager(args.basePath, args.directoryFormat, args.directoryDelta)
 
     scheduler.scheduler.add_job(lambda: filemanager.createDir(), replace_existing=True, id="create_dir_init")
     scheduler.scheduler.add_job(lambda: filemanager.createDir(), 'interval', **args.interval, replace_existing=True, id="create_dir")
