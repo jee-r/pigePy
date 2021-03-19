@@ -1,4 +1,4 @@
-#pigePy
+# pigePy
 
 [pigePy](https://jeer.fr/projects/pigePy) is a python script whose purpose is to record one audio stream per segment.
 
