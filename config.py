@@ -17,6 +17,7 @@ class Config:
         self.interval = self.parser.add_argument('--interval', '-i', dest="interval", default={"minutes": 60}, type=self.interval_validation, help='Audio files length kwargs format (default: {"minutes": 60})')
         self.createdir_delta = self.parser.add_argument('--directory-delta', '-dd', dest="directoryDelta", default={"days": 1}, type=self.interval_validation, help='directory creating delta, kwargs format (default: {"days": 1})')
         self.schedulerTimezone = self.parser.add_argument('--timezone', '-tz', dest="schedulerTimezone", default="utc", help='APScheduler timezone  (default: utc)')
+        self.chunkSize = self.parser.add_argument('--chunk-size', '-cz', dest="chunkSize", default=1024, type=self.check_chunkSize, help='How much data in octet will be stored in memory before it\'s write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)')
 
     def verify_dir(self, dirPath):
         directory = Path(dirPath)
@@ -40,6 +41,7 @@ class Config:
         else:
             return value
 
+
     def interval_validation(self, value):
         print(value)
         accepted_key = ["days", "hours", "minutes", "seconds"]
@@ -59,3 +61,17 @@ class Config:
                 raise argparse.ArgumentTypeError('Duration in minutes must be a positive integer.')
 
         return literal_eval(value)
+
+    def check_chunkSize(self, value):
+        try:
+            value = int(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError(
+                'Chunk size must be a positive integer.')
+
+        if value < 1:
+            raise argparse.ArgumentTypeError(
+                'Chunk size must be a positive integer.')
+        else:
+            return value
+

@@ -12,7 +12,7 @@ class Recorder():
     """Record live stream"""
 
 
-    def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, name='Recorder'):
+    def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, chunkSize, name='Recorder'):
 
         self._stopevent = threading.Event()
 
@@ -21,7 +21,7 @@ class Recorder():
         self.interval = interval
         self.directoryFormat = directoryFormat
         self.filenameFormat = filenameFormat
-
+        self.chunkSize = chunkSize
 
         self.req = requests.Session()
         self.response = ""
@@ -78,7 +78,7 @@ class Recorder():
         with open(dest, 'wb') as out_file:
             try:
                 print(f"Start writing new audio file in : {dest} job_id : {current_job_id}")
-                for chunk in self.streamData.iter_content(chunk_size=1024):  # 1MB chunks
+                for chunk in self.streamData.iter_content(chunk_size=1024*self.chunkSize):
                     out_file.write(chunk)
                     if self.writeFile_thread_stopEvent.is_set():
                         print(f"Stop event called")

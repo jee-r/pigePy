@@ -14,7 +14,7 @@ def main():
     """Scheduler"""
     scheduler = Scheduler(args.schedulerTimezone)
 
-    recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat)
+    recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
 
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), id="recorder_writeFile_init", max_instances=2)
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, max_instances=2, replace_existing=True, id="recorder_writeFile")
