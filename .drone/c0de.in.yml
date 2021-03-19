@@ -28,7 +28,7 @@ steps:
     GIT_MIRROR_USER: jee
     GIT_MIRROR_TOKEN:
       from_secret: FRAMAGIT_TOKEN
-    GIT_MIRROR_REPO: framagit.org/quetsch/pigePygit
+    GIT_MIRROR_REPO: framagit.org/quetsch/pigePy.git
   when:
     branch:
       - master
