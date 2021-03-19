@@ -15,8 +15,21 @@ class FileManager:
         self.directoryDelta = directoryDelta
 
     def createDir(self):
-        #timeDeltaArg = {self.retentionBy: self.interval}
-        directory_day = datetime.now() + timedelta(**self.directoryDelta)
-        delta_dir = directory_day.strftime(self.directoryFormat)
-        Path(str(self.basePath) + "/" + str(delta_dir)).mkdir(parents=True, exist_ok=True)
-        print(f"create directory : {str(self.basePath)}/{str(delta_dir)}")
+        now = datetime.now()
+        delta = now + timedelta(**self.directoryDelta)
+        today_dir = now.strftime(self.directoryFormat)
+        delta_dir = delta.strftime(self.directoryFormat)
+        today_full_path = str(self.basePath) + "/" + str(today_dir)
+        delta_full_path = str(self.basePath) + "/" + str(delta_dir)
+
+        try:
+            if not Path(today_full_path).is_dir():
+                Path(today_full_path).mkdir(parents=True, exist_ok=True)
+                print(f"create directory : {today_full_path}")
+
+            if not Path(delta_full_path).is_dir():
+                Path(delta_full_path).mkdir(parents=True, exist_ok=True)
+                print(f"create directory : {delta_full_path}")
+
+        except Exception as ex:
+            print(f"Create directory failed : {ex}")
