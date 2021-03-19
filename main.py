@@ -21,8 +21,8 @@ def main():
 
     filemanager = FileManager(args.basePath, args.directoryFormat)
 
-    scheduler.scheduler.add_job(lambda: filemanager.createOneDir(), replace_existing=True, id="create_dir_init")
-    scheduler.scheduler.add_job(lambda: filemanager.createOneDir(), 'interval', **args.interval, replace_existing=True, id="create_dir")
+    scheduler.scheduler.add_job(lambda: filemanager.createDir(), replace_existing=True, id="create_dir_init")
+    scheduler.scheduler.add_job(lambda: filemanager.createDir(), 'interval', **args.interval, replace_existing=True, id="create_dir")
 
     """DEBUG: print threads each interval"""
     #scheduler.scheduler.add_job(lambda: recorder.threadStatus(), id="threadStatus_init", max_instances=2)
