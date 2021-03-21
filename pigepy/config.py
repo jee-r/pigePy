@@ -6,9 +6,7 @@ from pathlib import Path
 from ast import literal_eval
 
 class Config:
-
     def __init__(self):
-
         self.parser = argparse.ArgumentParser(description='PigePy is a script for recording audio stream')
         self.streamUrl = self.parser.add_argument('--stream', '-s', dest="stream", required=True, help='specify a stream url')
         self.basePath = self.parser.add_argument('--base-path', '-b', dest="basePath", required=True, type=self.verify_dir, help='Base destination directory absolute path.')
@@ -20,7 +18,6 @@ class Config:
         self.chunkSize = self.parser.add_argument('--chunk-size', '-cz', dest="chunkSize", default=1024, type=self.check_chunkSize, help='How much data in octet will be stored in memory before it\'s write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)')
         self.healthcheck = self.parser.add_argument('--healthcheck', dest="healthcheck", default=False, help='Provide a healthcheck private APIKey to enable healthcheck monitoring (see https://healthchecks.io/ for more infos default: False)')
         self.healthcheck_host = self.parser.add_argument('--healthcheck-host', dest="healthcheckHost", default="https://healthchecks.io", help='healthcheck host (see https://healthchecks.io/ for more infos default: https://healthchecks.io)')
-
 
     def verify_dir(self, dirPath):
         directory = Path(dirPath)
@@ -37,13 +34,11 @@ class Config:
         except ValueError:
             raise argparse.ArgumentTypeError(
                 'Duration in minutes must be a positive integer.')
-
         if value < 1:
             raise argparse.ArgumentTypeError(
                 'Duration in minutes must be a positive integer.')
         else:
             return value
-
 
     def interval_validation(self, value):
         accepted_key = ["days", "hours", "minutes", "seconds"]
@@ -52,15 +47,12 @@ class Config:
                 pass
             else:
                 raise argparse.ArgumentTypeError(f"{key} is not available")
-
             try:
                 val = int(val)
             except ValueError:
                 raise argparse.ArgumentTypeError('Duration in minutes must be a positive integer.')
-
             if val < 1:
                 raise argparse.ArgumentTypeError('Duration in minutes must be a positive integer.')
-
         return literal_eval(value)
 
     def check_chunkSize(self, value):
@@ -69,10 +61,8 @@ class Config:
         except ValueError:
             raise argparse.ArgumentTypeError(
                 'Chunk size must be a positive integer.')
-
         if value < 1:
             raise argparse.ArgumentTypeError(
                 'Chunk size must be a positive integer.')
         else:
             return value
-
