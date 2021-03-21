@@ -46,10 +46,8 @@ class Config:
 
 
     def interval_validation(self, value):
-        print(value)
         accepted_key = ["days", "hours", "minutes", "seconds"]
         for key, val in literal_eval(value).items():
-            print(key, val)
             if key  in accepted_key:
                 pass
             else:
