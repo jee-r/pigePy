@@ -8,14 +8,13 @@ import concurrent.futures
 from time import sleep
 from datetime import datetime
 
+
 class Recorder():
     """Record live stream"""
-
 
     def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, chunkSize, name='Recorder'):
 
         self._stopevent = threading.Event()
-
         self.stream = stream
         self.basePath = basePath
         self.interval = interval
@@ -30,10 +29,8 @@ class Recorder():
         self.writeFile_executor = False
         self.writeFile_job = True
 
-
     def _getStream(self, current_jobId, retry=False):
         """Listen the Stream"""
-
         if retry:
             sleep(5)
 
@@ -55,7 +52,6 @@ class Recorder():
                 return self.getStream(retry=True)
 
     def getStream(self):
-
         now = datetime.now()
         self.getStream_jobId = "getStream_jobId_" + str(now.timestamp())
 
@@ -66,7 +62,6 @@ class Recorder():
 
     def _writeFile(self, dest, current_job_id, retry=False):
         """Write file"""
-
         threading.current_thread().name = "WriteFileThread"
         self.writeFile_thread_stopEvent = threading.Event()
 
@@ -90,7 +85,6 @@ class Recorder():
                 self._writeFile(dest, current_job_id, retry=True)
 
     def writeFile(self):
-
         now = datetime.now()
         directoryName = now.strftime(self.directoryFormat)
         fileName = now.strftime(self.filenameFormat)

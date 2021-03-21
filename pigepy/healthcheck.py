@@ -3,10 +3,11 @@
 
 import requests
 
+
 class Healthcheck:
     """Healthcheck system"""
-    def __init__(self, apikey, host):
 
+    def __init__(self, apikey, host):
         self.apikey = apikey
         self.healthcheck_host = host
 
@@ -15,7 +16,6 @@ class Healthcheck:
         self.getCheckList()
 
     def ping(self, check_name, msg):
-
         url = self.healthcheck_urls[check_name]
         post_data = {"msg": msg}
 
@@ -26,7 +26,6 @@ class Healthcheck:
             print(f"Ping failed : {except_error_msg}")
 
     def fail(self, check_name, msg):
-
         url = self.healthcheck_urls[check_name] + "/fail"
         post_data = {"msg": msg}
 
@@ -37,7 +36,6 @@ class Healthcheck:
             print(f"Ping failed : {except_error_msg}")
 
     def getCheckList(self):
-
         self.healthcheck_urls = {"main": "", "recorder": "", "filemanager": ""}
 
         url = self.healthcheck_host + "/api/v1/checks/"
@@ -48,21 +46,19 @@ class Healthcheck:
         for item in jsonData["checks"]:
             self.healthcheck_urls[item["name"]] = item["ping_url"]
 
+
 def main():
 
     import sys
 
+
     healthcheck_apikey = sys.argv[1]
     healthcheck_host = sys.argv[2]
 
-    #print(args.healthcheck_urls["main"])
     healthcheck = Healthcheck(healthcheck_apikey, healthcheck_host)
     healthcheck.getCheckList()
     healthcheck.ping('main', "ping main")
     healthcheck.fail('main', "failed main")
 
 if __name__ == "__main__":
-
     main()
-
-

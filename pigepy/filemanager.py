@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from ast import literal_eval
 
+
 class FileManager:
     """Manage files"""
-    def __init__(self, basePath, directoryFormat, directoryDelta):
 
+    def __init__(self, basePath, directoryFormat, directoryDelta):
         self.basePath = Path(basePath)
         self.directoryFormat = directoryFormat
         self.directoryDelta = directoryDelta
