@@ -5,7 +5,9 @@ import configparser, argparse
 from pathlib import Path
 from ast import literal_eval
 
+
 class Config:
+
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='PigePy is a script for recording audio stream')
         self.streamUrl = self.parser.add_argument('--stream', '-s', dest="stream", required=True, help='specify a stream url')
