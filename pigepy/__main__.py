@@ -24,9 +24,9 @@ def main():
     scheduler.scheduler.add_job(lambda: filemanager.createDir(), replace_existing=True, id="create_dir_init")
     scheduler.scheduler.add_job(lambda: filemanager.createDir(), 'interval', **args.interval, replace_existing=True, id="create_dir")
 
-    if args.healthcheck and args.healthcheckHost:
+    if args.healthcheckUrl:
         from healthcheck import Healthcheck
-        healthcheck = Healthcheck(args.healthcheck, args.healthcheckHost)
+        healthcheck = Healthcheck(args.healthcheckUrl)
 
         scheduler.scheduler.add_job(lambda: healthcheck.ping("main", "ping"), replace_existing=True, id="Healthcheck_main_init")
         scheduler.scheduler.add_job(lambda: healthcheck.ping("main", "ping"), 'interval', minutes=10, replace_existing=True, id="Healthcheck_main")
