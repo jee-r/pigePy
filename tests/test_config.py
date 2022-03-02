@@ -3,8 +3,10 @@
 
 import sys
 sys.path.append("..")
+from pathlib import Path
 from pigepy.config import Config
 import unittest
+
 
 class TestArgs(unittest.TestCase):
 
@@ -13,7 +15,6 @@ class TestArgs(unittest.TestCase):
         self.config = Config()
 
     def test_verify_dir(self):
-        from pathlib import Path
         self.assertEqual(Path("/tmp"), self.config.verify_dir("/tmp"))
         with self.assertRaises(Exception): self.config.verify_dir(50)
         with self.assertRaises(Exception): self.config.verify_dir("ThisAString")
@@ -34,6 +35,7 @@ class TestArgs(unittest.TestCase):
     def test_check_chunkSize(self):
         self.assertEqual(50, self.config.check_chunkSize(50))
         with self.assertRaises(Exception): self.config.check_chunkSize("aString")
+
 
 if __name__ == '__main__':
     unittest.main()
