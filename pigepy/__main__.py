@@ -28,9 +28,13 @@ def main():
         logging.getLogger('apscheduler').setLevel(logging.ERROR)
 
     recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
-
+    
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), id="recorder_writeFile_init", max_instances=2)
-    scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, max_instances=2, replace_existing=True, id="recorder_writeFile")
+    if args.align:
+        start_date = scheduler.alignJob(args.interval)
+        scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, start_date=start_date, id="recorder_writeFile", max_instances=2)
+    else:
+        scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, id="recorder_writeFile", max_instances=2)
 
     filemanager = FileManager(args.basePath, args.directoryFormat, args.directoryDelta)
 
