@@ -5,7 +5,7 @@ import requests
 import logging
 #from logger import Logger
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 class Healthcheck:
     """Healthcheck system"""
@@ -24,9 +24,9 @@ class Healthcheck:
         try:
             response = self.req.post(url, data = post_data, timeout=10)
         except requests.RequestException as except_error_msg:
-            logger.error("Ping failed : " + except_error_msg)
+            logging.error("Ping failed : " + except_error_msg)
 
-        logger.info("Send Ping to " + self.healthcheck_url)
+        logging.info("Send Ping to " + self.healthcheck_url)
 
         return response
 
@@ -37,7 +37,7 @@ class Healthcheck:
         try:
             response = self.req.post(url, data = post_data, timeout=10)
         except requests.RequestException as except_error_msg:
-            logger.error("Ping failed : " + except_error_msg)
+            logging.error("Ping failed : " + except_error_msg)
 
         return response
 
