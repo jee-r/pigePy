@@ -24,6 +24,7 @@ class Config:
         self.schedulerTimezone = self.parser.add_argument('--timezone', '-tz', dest="schedulerTimezone", default="utc", help='APScheduler timezone  (default: utc)')
         self.chunkSize = self.parser.add_argument('--chunk-size', '-cz', dest="chunkSize", default=1024, type=self.check_chunkSize, help='How much data in octet will be stored in memory before it\'s write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)')
         self.healthcheck_url = self.parser.add_argument('--healthcheck-url', dest="healthcheckUrl", default=False, help='Provide a healthcheck url to enable healthcheck monitoring (see https://healthchecks.io/ for more infos default: False)')
+        self.healthcheck_interval = self.parser.add_argument('--heathcheck-interval', dest="healthcheckInterval", default={"minutes": 10}, type=self.interval_validation, help='healthcheck interval (aka ping interval) kwargs format (default: {"minutes": 10})')
         self.logLevel = self.parser.add_argument('--log-level', dest="logLevel", default="INFO", help='Set loggin output level (possible values DEBUG,INFO,WARNING,CRITICAL default: INFO)')
 
     def verify_dir(self, dirPath):

@@ -25,7 +25,7 @@ def main():
     if args.logLevel.upper() != 'DEBUG':
         logging.getLogger('apscheduler').setLevel(logging.ERROR)
     else:
-        logging.getLogger('apscheduler').setLevel(logging.INFO)
+        logging.getLogger('apscheduler').setLevel(logging.ERROR)
 
     recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
 
@@ -42,7 +42,7 @@ def main():
         healthcheck = Healthcheck(args.healthcheckUrl)
 
         scheduler.scheduler.add_job(lambda: healthcheck.ping("main", "ping"), replace_existing=True, id="Healthcheck_main_init")
-        scheduler.scheduler.add_job(lambda: healthcheck.ping("main", "ping"), 'interval', minutes=10, replace_existing=True, id="Healthcheck_main")
+        scheduler.scheduler.add_job(lambda: healthcheck.ping("main", "ping"), 'interval', **args.healthcheckInterval, replace_existing=True, id="Healthcheck_main")
 
     """DEBUG: print threads each interval"""
     #scheduler.scheduler.add_job(lambda: recorder.threadStatus(), id="threadStatus_init", max_instances=2)

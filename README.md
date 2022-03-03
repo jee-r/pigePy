@@ -37,7 +37,7 @@ TODO
 
 ```
 usage: pigepy [-h] --stream STREAM --base-path BASEPATH [--directory-format DIRECTORYFORMAT] [--file-format FILENAMEFORMAT] [--interval INTERVAL] [--directory-delta DIRECTORYDELTA]
-              [--timezone SCHEDULERTIMEZONE] [--chunk-size CHUNKSIZE] [--healthcheck-url HEALTHCHECKURL] [--log-level LOGLEVEL]
+              [--timezone SCHEDULERTIMEZONE] [--chunk-size CHUNKSIZE] [--healthcheck-url HEALTHCHECKURL] [--heathcheck-interval HEALTHCHECKINTERVAL] [--log-level LOGLEVEL]
 
 PigePy is a script for recording audio stream
 
@@ -61,6 +61,8 @@ optional arguments:
                         How much data in octet will be stored in memory before it's write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)
   --healthcheck-url HEALTHCHECKURL
                         Provide a healthcheck url to enable healthcheck monitoring (see https://healthchecks.io/ for more infos default: False)
+  --heathcheck-interval HEALTHCHECKINTERVAL
+                        healthcheck interval (aka ping interval) kwargs format (default: {"minutes": 10})
   --log-level LOGLEVEL  Set loggin output level (possible values DEBUG,INFO,WARNING,CRITICAL default: INFO)
 ```
 
