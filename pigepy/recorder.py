@@ -80,7 +80,7 @@ class Recorder():
         with open(dest, 'wb') as out_file:
             try:
                 # print(f"Start writing new audio file in : {dest} job_id : {current_job_id}")
-                logging.info("Writing new audio in : %s job_id %s", dest, current_job_id)
+                logging.info("Start Writing new audio in : %s job_id %s", dest, current_job_id)
                 for chunk in self.streamData.iter_content(chunk_size=1024*self.chunkSize):
                     out_file.write(chunk)
                     if self.writeFile_thread_stopEvent.is_set():
