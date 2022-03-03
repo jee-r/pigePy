@@ -36,7 +36,8 @@ TODO
 ## Usage
 
 ```
-usage: main.py [-h] --stream STREAM --base-path BASEPATH [--directory-format DIRECTORYFORMAT] [--file-format FILENAMEFORMAT] [--interval INTERVAL]
+usage: pigepy [-h] --stream STREAM --base-path BASEPATH [--directory-format DIRECTORYFORMAT] [--file-format FILENAMEFORMAT] [--interval INTERVAL] [--directory-delta DIRECTORYDELTA]
+              [--timezone SCHEDULERTIMEZONE] [--chunk-size CHUNKSIZE] [--healthcheck-url HEALTHCHECKURL] [--log-level LOGLEVEL]
 
 PigePy is a script for recording audio stream
 
@@ -52,7 +53,15 @@ optional arguments:
                         filename format can contain strftime format (default: "%Hh-%Mm-%Ss")
   --interval INTERVAL, -i INTERVAL
                         Audio files length kwargs format (default: {"minutes": 60})
-
+  --directory-delta DIRECTORYDELTA, -dd DIRECTORYDELTA
+                        directory creating delta, kwargs format (default: {"days": 1})
+  --timezone SCHEDULERTIMEZONE, -tz SCHEDULERTIMEZONE
+                        APScheduler timezone (default: utc)
+  --chunk-size CHUNKSIZE, -cz CHUNKSIZE
+                        How much data in octet will be stored in memory before it's write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)
+  --healthcheck-url HEALTHCHECKURL
+                        Provide a healthcheck url to enable healthcheck monitoring (see https://healthchecks.io/ for more infos default: False)
+  --log-level LOGLEVEL  Set loggin output level (possible values DEBUG,INFO,WARNING,CRITICAL default: INFO)
 ```
 
 ## Roadmap
