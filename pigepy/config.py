@@ -20,6 +20,7 @@ class Config:
         self.dirFormat = self.parser.add_argument('--directory-format', '-df', dest="directoryFormat", default='%Y/%m/%d', help='sub directories structure in strftime format (default: "%%Y/%%m/%%d")')
         self.fileFormat = self.parser.add_argument('--file-format', '-ff', dest="filenameFormat", default="%Hh-%Mm-%Ss", help='filename format can contain strftime format (default: "%%Hh-%%Mm-%%Ss")')
         self.interval = self.parser.add_argument('--interval', '-i', dest="interval", default={"minutes": 60}, type=self.interval_validation, help='Audio files length kwargs format (default: {"minutes": 60})')
+        self.alignToHour = self.parser.add_argument('--align', dest="align", action='store_true', help='automatcally align next record to hour hh:00')
         self.createdir_delta = self.parser.add_argument('--directory-delta', '-dd', dest="directoryDelta", default={"days": 1}, type=self.interval_validation, help='directory creating delta, kwargs format (default: {"days": 1})')
         self.schedulerTimezone = self.parser.add_argument('--timezone', '-tz', dest="schedulerTimezone", default="utc", help='APScheduler timezone  (default: utc)')
         self.chunkSize = self.parser.add_argument('--chunk-size', '-cz', dest="chunkSize", default=1024, type=self.check_chunkSize, help='How much data in octet will be stored in memory before it\'s write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)')
