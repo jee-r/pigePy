@@ -68,6 +68,11 @@ optional arguments:
 
 ## Roadmap
 
+- [ ] healthcheck for each task
+- [ ] start next record at precise time eg : if script start at 11h43 then next scheduled record should be started at 12h00 instead at 12h43
+- [ ] Dockerfile and docker-compose
+- [ ] github CI
+
 ## Contribution
 
 ## License
