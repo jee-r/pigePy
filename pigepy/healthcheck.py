@@ -2,7 +2,10 @@
 # encoding: utf-8
 
 import requests
+import logging
+#from logger import Logger
 
+logger = logging.getLogger(__name__)
 
 class Healthcheck:
     """Healthcheck system"""
@@ -11,15 +14,19 @@ class Healthcheck:
 
         self.healthcheck_url = healthcheck_url
         self.req = requests.Session()
+        #self.logger = Logger("Healthcheck", logger_level=logger_level).logger
 
     def ping(self, check_name, msg):
+
         url = self.healthcheck_url
         post_data = {"msg": msg}
 
         try:
             response = self.req.post(url, data = post_data, timeout=10)
         except requests.RequestException as except_error_msg:
-            print(f"Ping failed : {except_error_msg}")
+            logger.error("Ping failed : " + except_error_msg)
+
+        logger.info("Send Ping to " + self.healthcheck_url)
 
         return response
 
@@ -30,7 +37,7 @@ class Healthcheck:
         try:
             response = self.req.post(url, data = post_data, timeout=10)
         except requests.RequestException as except_error_msg:
-            print(f"Ping failed : {except_error_msg}")
+            logger.error("Ping failed : " + except_error_msg)
 
         return response
 

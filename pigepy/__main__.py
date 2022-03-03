@@ -1,18 +1,31 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import logging
 from scheduler import Scheduler
 from recorder import Recorder
 from filemanager import FileManager
 from config import Config
+# from logger import Logger
+
 
 def main():
+
     """Get args from config.py"""
     config = Config()
     args = config.parser.parse_args()
 
+    """Set Logger"""
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=getattr(logging, args.logLevel.upper()))
+    logging.info('Logging init')
+
     """Scheduler"""
     scheduler = Scheduler(args.schedulerTimezone)
+
+    if args.logLevel.upper() != 'DEBUG':
+        logging.getLogger('apscheduler').setLevel(logging.ERROR)
+    else:
+        logging.getLogger('apscheduler').setLevel(logging.INFO)
 
     recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
 
@@ -37,6 +50,8 @@ def main():
 
     scheduler.scheduler.start()
     scheduler.scheduler.print_jobs()
+    
+    logging.info('Good bye')
 
 if __name__ == "__main__":
     main()

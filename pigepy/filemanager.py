@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import logging
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -11,9 +12,14 @@ class FileManager:
     """Manage files"""
 
     def __init__(self, basePath, directoryFormat, directoryDelta):
+
+        logging.debug('FileManager: Initializing...')
+        
         self.basePath = Path(basePath)
         self.directoryFormat = directoryFormat
         self.directoryDelta = directoryDelta
+        
+        logging.debug('FileManager: Initialized')
 
     def createDir(self):
         now = datetime.now()
@@ -26,11 +32,14 @@ class FileManager:
         try:
             if not Path(today_full_path).is_dir():
                 Path(today_full_path).mkdir(parents=True, exist_ok=True)
-                print(f"create directory : {today_full_path}")
+                # print(f"create directory : {today_full_path}")
+                logging.info("create directory : %s", today_full_path)
 
             if not Path(delta_full_path).is_dir():
                 Path(delta_full_path).mkdir(parents=True, exist_ok=True)
-                print(f"create directory : {delta_full_path}")
+                # print(f"create directory : {delta_full_path}")
+                logging.info("create directory : %s", delta_full_path)
 
         except Exception as ex:
-            print(f"Create directory failed : {ex}")
+            # print(f"Create directory failed : {ex}")
+            logging.exception("Create directory failed : %s", ex)

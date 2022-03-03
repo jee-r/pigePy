@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import logging
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.background import BlockingScheduler
 from apscheduler.schedulers.base import BaseScheduler
@@ -14,14 +16,16 @@ class Scheduler:
 
     def __init__(self, timezone):
 
+        logging.info("Scheduler: Initializing...")
         #self.scheduler = BackgroundScheduler(daemon=False)
         self.scheduler = BlockingScheduler(daemon=False, timezone=timezone)
         #self.scheduler.add_listener(self.listener, EVENT_ALL)
+        logging.info("Scheduler: Initialized")
 
     def start(self):
         """Start Scheduler"""
 
-        print('Scheduler Start')
+        logging.info("Scheduler: Started")
         self.scheduler.start()
         self.scheduler.print_jobs()
 
@@ -30,7 +34,7 @@ class Scheduler:
 
         self.scheduler.remove_job(myjobid)
         self.scheduler.print_jobs()
-        print('Scheduler Stoped')
+        logging.info("Scheduler: Stopped")
 
     def status(self):
         """Print jobs"""
@@ -39,8 +43,8 @@ class Scheduler:
 
     def listener(self, event):
         """print all scheduler's events, usefull for debug"""
-
-        print(event)
+    
+        logging.debug("Scheduler: %s", event)
 
     def addRecorderJob(self, job_interval_args, args, replace_value=True):
         """ """
@@ -50,13 +54,18 @@ class Scheduler:
             from recorder import Recorder
 
             recorder_now_time = datetime.now()
-            print(recorder_now_time)
+            logger.info("Scheduler: %s", recorder_now_time)
+            # print(recorder_now_time)
             recorder_delta = timedelta(**job_interval_args)
+            logger.info("Scheduler: %s", recorder_delta)
             print(recorder_delta)
             recorder_next_time = recorder_now_time + timedelta(**job_interval_args)
 
-            print("recorder now : " + str(recorder_now_time))
-            print("recorder next : " + str(recorder_next_time))
+            logging.debug("Scheduler: recorder now : %s", recorder_now_time)
+            logging.debug("Scheduler: recorder next : %s", recorde_next_time)
+
+            # print("recorder now : " + str(recorder_now_time))
+            # print("recorder next : " + str(recorder_next_time))
 
             recorder = Recorder(args.stream, args.segmentDuration, args.basePath, args.directoryFormat, args.filenameFormat, name='Recorder')
 
