@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+#import logging
 import configparser, argparse
 from pathlib import Path
 from ast import literal_eval
 
 
 class Config:
-
+    """
+    Load configuration from command lines arguments
+    Note: logging line are commented because Config is loaded before Root handler is called, if someone know a workaround please submit a  pull request
+    """
     def __init__(self):
+
         self.parser = argparse.ArgumentParser(description='PigePy is a script for recording audio stream')
         self.streamUrl = self.parser.add_argument('--stream', '-s', dest="stream", required=True, help='specify a stream url')
         self.basePath = self.parser.add_argument('--base-path', '-b', dest="basePath", required=True, type=self.verify_dir, help='Base destination directory absolute path.')
@@ -19,13 +24,17 @@ class Config:
         self.schedulerTimezone = self.parser.add_argument('--timezone', '-tz', dest="schedulerTimezone", default="utc", help='APScheduler timezone  (default: utc)')
         self.chunkSize = self.parser.add_argument('--chunk-size', '-cz', dest="chunkSize", default=1024, type=self.check_chunkSize, help='How much data in octet will be stored in memory before it\'s write in the file. Must an integer multiple of 1024 eg 1024*512 = 0.5Mo (default: 1024 = 1Mo)')
         self.healthcheck_url = self.parser.add_argument('--healthcheck-url', dest="healthcheckUrl", default=False, help='Provide a healthcheck url to enable healthcheck monitoring (see https://healthchecks.io/ for more infos default: False)')
+        self.logLevel = self.parser.add_argument('--log-level', dest="logLevel", default="INFO", help='Set loggin output level (possible values DEBUG,INFO,WARNING,CRITICAL default: INFO)')
 
     def verify_dir(self, dirPath):
+        
         directory = Path(dirPath)
         if directory.exists() and directory.is_dir():
+            # logging.info('Directory %s exist', dirPath)
             print(f"ok directory : {dirPath} exist")
             return directory
         else:
+            logging.error("Directory %s don't exist or is not readable", dirPath)
             print(f"Error directory : {dirPath} don't exist")
             raise argparse.ArgumentTypeError(f"readable_dir:{dirPath} is not a valid path")
 
@@ -35,9 +44,11 @@ class Config:
         except ValueError:
             raise argparse.ArgumentTypeError(
                 'Duration in minutes must be a positive integer.')
+            # logging.exception('Duration in minutes must be a positive integer.')
         if value < 1:
             raise argparse.ArgumentTypeError(
                 'Duration in minutes must be a positive integer.')
+            # logging.exception('Duration in minutes must be a positive integer.')
         else:
             return value
 
@@ -48,12 +59,15 @@ class Config:
                 pass
             else:
                 raise argparse.ArgumentTypeError(f"{key} is not available")
+                # logging.exception("%s is not available", key)
             try:
                 val = int(val)
             except ValueError:
                 raise argparse.ArgumentTypeError('Duration in minutes must be a positive integer.')
+                # logging.exception('Duration in minutes must be a positive integer.')
             if val < 1:
                 raise argparse.ArgumentTypeError('Duration in minutes must be a positive integer.')
+                # logging.exception('Duration in minutes must be a positive integer.')
         return literal_eval(value)
 
     def check_chunkSize(self, value):
@@ -62,8 +76,10 @@ class Config:
         except ValueError:
             raise argparse.ArgumentTypeError(
                 'Chunk size must be a positive integer.')
+            # logging.exception('Chunk size must be a positive integer.')
         if value < 1:
             raise argparse.ArgumentTypeError(
                 'Chunk size must be a positive integer.')
+            # logging.exception('Chunk size must be a positive integer.')
         else:
             return value

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import logging
 import requests
 import threading
 import io
@@ -8,12 +9,11 @@ import concurrent.futures
 from time import sleep
 from datetime import datetime
 
-
 class Recorder():
     """Record live stream"""
 
     def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, chunkSize, name='Recorder'):
-
+        
         self._stopevent = threading.Event()
         self.stream = stream
         self.basePath = basePath
@@ -29,6 +29,8 @@ class Recorder():
         self.writeFile_executor = False
         self.writeFile_job = True
 
+        logging.info('Recorder init : %s', name)
+
     def _getStream(self, current_jobId, retry=False):
         """Listen the Stream"""
         if retry:
@@ -42,12 +44,16 @@ class Recorder():
                 self.streamData = self.req.get(self.stream, stream=True)
                 self.streamData.raise_for_status()
                 if not self.getStream_jobId == current_jobId:
-                    print(f"Connection closed : {current_jobId}")
+                    
+                    # print(f"Connection closed : {current_jobId}")
+                    logging.info("Connection closed : %s", current_jobId)
                     return response
-                print(f"Connection etablished : {current_jobId}")
+                #print(f"Connection etablished : {current_jobId}")
+                logging.info("Connection established : %s", current_jobId)
                 self.connection_etablished = True
             except Exception as ex:
-                print(f"Connection failed with error: {ex}")
+                # print(f"Connection failed with error: {ex}")
+                logging.error("Connection failed with error: %s", ex)
                 self.connection_etablished = False
                 return self.getStream(retry=True)
 
@@ -65,23 +71,28 @@ class Recorder():
         threading.current_thread().name = "WriteFileThread"
         self.writeFile_thread_stopEvent = threading.Event()
 
-        print(f"waiting for connection...")
+        # print(f"waiting for connection...")
+        logging.info("Waiting for connection...")
 
         while not self.connection_etablished:
             sleep(1)
 
         with open(dest, 'wb') as out_file:
             try:
-                print(f"Start writing new audio file in : {dest} job_id : {current_job_id}")
+                # print(f"Start writing new audio file in : {dest} job_id : {current_job_id}")
+                logging.info("Writing new audio in : %s job_id %s", dest, current_job_id)
                 for chunk in self.streamData.iter_content(chunk_size=1024*self.chunkSize):
                     out_file.write(chunk)
                     if self.writeFile_thread_stopEvent.is_set():
-                        print(f"Stop event called")
+                        # print(f"Stop event called")
+                        logging.info("Stopped event called")
                         out_file.close()
-                        print(f"Audio File writed in : {dest} jobid: {current_job_id}")
+                        # print(f"Audio File writed in : {dest} jobid: {current_job_id}")
+                        logging.info("Audio File written in : %s jobid: %s", dest, current_job_id) 
                         break
             except Exception as ex:
-                print(f"writeFile {current_job_id} failed with error: {ex}")
+                # print(f"writeFile {current_job_id} failed with error: {ex}")
+                logging.error("WriteFile %s failed with error: %s", current_job_id, ex)
                 self._writeFile(dest, current_job_id, retry=True)
 
     def writeFile(self):
@@ -114,7 +125,9 @@ class Recorder():
 
     def threadStatus(self):
         """Print all threads for debug purpose"""
-        print(threading.active_count())
+        # print(threading.active_count())
+        logging.debug("%s", threading.active_count())
 
         for thread in threading.enumerate():
-            print(thread.name)
+            # print(thread.name)
+            logging.debug("%s", thread.name)
