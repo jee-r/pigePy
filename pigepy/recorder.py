@@ -3,6 +3,8 @@
 
 import logging
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import threading
 import io
 import concurrent.futures
@@ -23,6 +25,7 @@ class Recorder():
         self.chunkSize = chunkSize
 
         self.req = requests.Session()
+        self.retry = requests.adapters.HTTPAdapter(max_retries=8)
         self.response = ""
 
         self.writeFile_thread = False
@@ -41,6 +44,7 @@ class Recorder():
 
         while not self.connection_etablished:
             try:
+                self.req.mount('http://', self.retry)
                 self.streamData = self.req.get(self.stream, stream=True)
                 self.streamData.raise_for_status()
                 if not self.getStream_jobId == current_jobId:
