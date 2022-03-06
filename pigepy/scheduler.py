@@ -46,14 +46,18 @@ class Scheduler:
     
         logging.debug("Scheduler: %s", event)
 
-    def alignJob(self, job_interval_args):
+    def alignJob(self, job_interval_args, alignHour, alignMinute):
         """
         Align job after init to the next hour
         TODO: create dynamic align system like minute, quarter, range of hours etc 
         """
         now = datetime.now()
-        now_plus_one_hour = now + timedelta(hours = 1)
-        alignto = now_plus_one_hour.replace(second=0, microsecond=0, minute=0) 
+        if alignHour:
+            now_plus_one_hour = now + timedelta(hours = 1)
+            alignto = now_plus_one_hour.replace(second=0, microsecond=0, minute=0) 
+        elif alignMinute:
+            now_plus_one_minute = now + timedelta(minutes = 1)
+            alignto = now_plus_one_minute.replace(second=0, microsecond=0) 
 
         logging.info("Align job value:  %s", alignto)
         

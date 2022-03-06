@@ -30,8 +30,10 @@ def main():
     recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
     
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), id="recorder_writeFile_init", max_instances=2)
-    if args.align:
-        start_date = scheduler.alignJob(args.interval)
+
+    if args.alignHour or args.alignMinute:
+        logging.info('align: %s __ %s', args.alignHour, args.alignMinute) 
+        start_date = scheduler.alignJob(args.interval, args.alignHour, args.alignMinute)
         scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, start_date=start_date, id="recorder_writeFile", max_instances=2)
     else:
         scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, id="recorder_writeFile", max_instances=2)
