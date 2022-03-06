@@ -53,7 +53,9 @@ optional arguments:
                         filename format can contain strftime format (default: "%Hh-%Mm-%Ss")
   --interval INTERVAL, -i INTERVAL
                         Audio files length kwargs format (default: {"minutes": 60})
-  --align               automatcally align next record to hour hh:00
+  --align-hour          automatcally align next record to hour hh:00:00
+  --align-minute        automatcally align next record to hour hh:mm:00
+
   --directory-delta DIRECTORYDELTA, -dd DIRECTORYDELTA
                         directory creating delta, kwargs format (default: {"days": 1})
   --timezone SCHEDULERTIMEZONE, -tz SCHEDULERTIMEZONE
