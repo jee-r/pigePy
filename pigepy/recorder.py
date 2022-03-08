@@ -3,8 +3,7 @@
 
 import logging
 import requests
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter, Retry
 import threading
 import io
 import concurrent.futures
@@ -25,7 +24,12 @@ class Recorder():
         self.chunkSize = chunkSize
 
         self.req = requests.Session()
-        self.retry = requests.adapters.HTTPAdapter(max_retries=8)
+        self.retries = Retry(total=20,
+                backoff_factor=0.05,
+                status_forcelist=[404, 429, 500, 502, 503, 504]
+                )
+
+        self.retry = requests.adapters.HTTPAdapter(max_retries=self.retries)
         self.response = ""
 
         self.writeFile_thread = False
@@ -37,18 +41,16 @@ class Recorder():
     def _getStream(self, current_jobId, retry=False):
         """Listen the Stream"""
         if retry:
-            sleep(5)
+            logging.info('Retry to connect to %s', self.stream)
 
-        attempts = 5
         self.connection_etablished = False
 
         while not self.connection_etablished:
             try:
-                self.req.mount('http://', self.retry)
+                self.req.mount(self.stream, self.retry)
                 self.streamData = self.req.get(self.stream, stream=True)
                 self.streamData.raise_for_status()
                 if not self.getStream_jobId == current_jobId:
-                    
                     # print(f"Connection closed : {current_jobId}")
                     logging.info("Connection closed : %s", current_jobId)
                     return response
