@@ -3,6 +3,7 @@
 
 import logging
 import sys
+import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from ast import literal_eval
@@ -11,19 +12,19 @@ from ast import literal_eval
 class FileManager:
     """Manage files"""
 
-    def __init__(self, basePath, directoryFormat, directoryDelta):
+    def __init__(self, basePath, directoryFormat):
 
         logging.debug('FileManager: Initializing...')
         
         self.basePath = Path(basePath)
         self.directoryFormat = directoryFormat
-        self.directoryDelta = directoryDelta
+        # self.directoryDelta = directoryDelta
         
         logging.debug('FileManager: Initialized')
 
-    def createDir(self):
+    def createDir(self, directoryDelta):
         now = datetime.now()
-        delta = now + timedelta(**self.directoryDelta)
+        delta = now + timedelta(**directoryDelta)
         today_dir = now.strftime(self.directoryFormat)
         delta_dir = delta.strftime(self.directoryFormat)
         today_full_path = str(self.basePath) + "/" + str(today_dir)
@@ -43,3 +44,15 @@ class FileManager:
         except Exception as ex:
             # print(f"Create directory failed : {ex}")
             logging.exception("Create directory failed : %s", ex)
+
+    def pruneOldDirectories(self, days=90):
+        cutoff_date = datetime.now() - timedelta(days=days)
+        for directory in self.basePath.iterdir():
+            if directory.is_dir():
+                try:
+                    directory_date = datetime.strptime(directory.name, self.directoryFormat).date()
+                    if directory_date < cutoff_date.date():
+                        shutil.rmtree(directory)
+                        logging.info("Removed directory: %s", directory)
+                except Exception as ex:
+                    logging.exception("Failed to remove directory: %s", directory)
