@@ -85,10 +85,27 @@ class Scheduler:
             # print("recorder next : " + str(recorder_next_time))
 
             recorder = Recorder(args.stream, args.segmentDuration, args.basePath, args.directoryFormat, args.filenameFormat, name='Recorder')
+            retry_count = 0
+            base_sleep_time = 5  # Initial sleep time in seconds
+            max_sleep_time = 60  # Maximum sleep time in seconds
+            
+            while True:
+                try:
 
-            self.scheduler.add_job(lambda: recorder.start(), replace_existing=replace_value, id="recorder_start")
-            self.scheduler.add_job(lambda: recorder.join(), run_date=recorder_next_time, replace_existing=replace_value, id="recorder_join")
-            self.scheduler.add_job(lambda: recorder.reset_job(), run_date=recorder_next_time, replace_existing=replace_value, id='recorder_reset')
+                    self.scheduler.add_job(lambda: recorder.start(), replace_existing=replace_value, id="recorder_start")
+                    self.scheduler.add_job(lambda: recorder.join(), run_date=recorder_next_time, replace_existing=replace_value, id="recorder_join")
+                    self.scheduler.add_job(lambda: recorder.reset_job(), run_date=recorder_next_time, replace_existing=replace_value, id='recorder_reset')
+
+                    break  # Exit the loop if the Recorder starts successfully
+                except Exception as ex:
+                    logging.error("Recorder failed to start. Retrying... Error: %s", str(ex))
+                    retry_count += 1
+                    sleep_time = min(base_sleep_time * retry_count, max_sleep_time)
+                    time.sleep(sleep_time)  # Wait for an increasing amount of time before retrying
+                    
+            # self.scheduler.add_job(lambda: recorder.start(), replace_existing=replace_value, id="recorder_start")
+            # self.scheduler.add_job(lambda: recorder.join(), run_date=recorder_next_time, replace_existing=replace_value, id="recorder_join")
+            # self.scheduler.add_job(lambda: recorder.reset_job(), run_date=recorder_next_time, replace_existing=replace_value, id='recorder_reset')
 
 
         self.scheduler.add_job(lambda: recorderLoop(), replace_existing=True, id="recorder_loop")
