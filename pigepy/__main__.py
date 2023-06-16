@@ -38,10 +38,10 @@ def main():
     else:
         scheduler.scheduler.add_job(lambda: recorder.writeFile(), 'interval', **args.interval, id="recorder_writeFile", max_instances=2)
 
-    filemanager = FileManager(args.basePath, args.directoryFormat, args.directoryDelta)
+    filemanager = FileManager(args.basePath, args.directoryFormat)
 
-    scheduler.scheduler.add_job(lambda: filemanager.createDir(), replace_existing=True, id="create_dir_init")
-    scheduler.scheduler.add_job(lambda: filemanager.createDir(), 'interval', **args.interval, replace_existing=True, id="create_dir")
+    scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), replace_existing=True, id="create_dir_init")
+    scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), 'interval', **args.interval, replace_existing=True, id="create_dir")
 
     if args.healthcheckUrl:
         from healthcheck import Healthcheck
