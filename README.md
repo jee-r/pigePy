@@ -28,7 +28,35 @@ pip install -r requirements.txt
 ```
 
 ### Docker
-TODO
+
+
+`docker-compose`
+
+```yaml
+version: '3'
+services:
+  pige:
+    image: pigepy:latest
+    container_name: pigepy
+    build:
+      context: .
+    environment:
+      - TZ=Europe/Paris
+    volumes: 
+      - storagebox_pige:/data
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  storagebox_pige:
+    driver: rclone
+    driver_opts:
+      remote: 'storagebox_pige:'
+      allow_other: 'true'
+      vfs_cache_mode: full
+      poll_interval: 0
+
+```
+
 
 ### Kubernetes
 TODO
@@ -73,7 +101,7 @@ optional arguments:
 
 - [ ] healthcheck for each task
 - [x] start next record at precise time eg : if script start at 11h43 then next scheduled record should be started at 12h00 instead at 12h43
-- [ ] Dockerfile and docker-compose
+- [x] Dockerfile and docker-compose
 - [ ] github CI
 
 ## Contribution
