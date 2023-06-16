@@ -45,7 +45,7 @@ class Recorder():
 
         self.connection_etablished = False
 
-        while not self.connection_etablished:
+        while not self.connection_etablished and not self._stopevent.is_set():
             try:
                 self.req.mount(self.stream, self.retry)
                 self.streamData = self.req.get(self.stream, stream=True)
@@ -128,7 +128,15 @@ class Recorder():
             if self.writeFile_executor_old:
                 self.writeFile_executor_old.shutdown(wait=False)
             return
+    
+    def stop(self):
+        """Stop the Recorder gracefully"""
+        self._stopevent.set()
 
+    def is_stopped(self):
+        """Check if the Recorder is stopped"""
+        return self._stopevent.is_set()
+    
     def threadStatus(self):
         """Print all threads for debug purpose"""
         # print(threading.active_count())
