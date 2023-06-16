@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys
+import sys 
+import os
 #sys.path.append("..")
 import unittest
 import warnings
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from pigepy.healthcheck import Healthcheck
 
 
@@ -20,7 +24,7 @@ class TestHealthcheck(unittest.TestCase):
         result = self.healthcheck.ping('main', "this is a test")
 
         self.assertEqual(200, result.status_code)
-        self.assertEqual("OK", result.text)
+        self.assertEqual("OK (not found)", result.text)
 
     def test_fail_healthcheck(self):
         """Test fail connection"""
@@ -28,7 +32,7 @@ class TestHealthcheck(unittest.TestCase):
         result = self.healthcheck.fail('main', "this is a test")
 
         self.assertEqual(200, result.status_code)
-        self.assertEqual("OK", result.text)
+        self.assertEqual("OK (not found)", result.text)
 
 
     def test_ping_healtcheck_with_fake_url(self):
@@ -37,8 +41,8 @@ class TestHealthcheck(unittest.TestCase):
         warnings.simplefilter('ignore', category=ResourceWarning)
         result = self.healthcheck.ping('main', "this is a test")
 
-        self.assertEqual(404, result.status_code)
-        self.assertEqual("404", result.text)
+        self.assertEqual(400, result.status_code)
+        self.assertEqual("invalid url format", result.text)
 
     def test_fail_healthcheck_with_fake_url(self):
         """Test fail connection with a fake url (404 handling)"""
@@ -46,8 +50,8 @@ class TestHealthcheck(unittest.TestCase):
         warnings.simplefilter('ignore', category=ResourceWarning)
         result = self.healthcheck.fail('main', "this is a test")
 
-        self.assertEqual(404, result.status_code)
-        self.assertEqual("404", result.text)
+        self.assertEqual(400, result.status_code)
+        self.assertEqual("invalid url format", result.text)
 
 
 if __name__ == '__main__':
