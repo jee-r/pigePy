@@ -13,7 +13,7 @@ from datetime import datetime
 class Recorder():
     """Record live stream"""
 
-    def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, chunkSize, name='Recorder'):
+    def __init__(self, stream, basePath, interval, directoryFormat, filenameFormat, chunkSize, noSubDir, name='Recorder',):
         
         self._stopevent = threading.Event()
         self.stream = stream
@@ -22,6 +22,7 @@ class Recorder():
         self.directoryFormat = directoryFormat
         self.filenameFormat = filenameFormat
         self.chunkSize = chunkSize
+        self.noSubDir = noSubDir
 
         self.req = requests.Session()
         self.retries = Retry(total=20,
@@ -105,7 +106,12 @@ class Recorder():
         now = datetime.now()
         directoryName = now.strftime(self.directoryFormat)
         fileName = now.strftime(self.filenameFormat)
-        dest = str(self.basePath) + "/" + directoryName + "/" + fileName + ".mp3"
+        
+        if not self.noSubDir:
+            dest = str(self.basePath) + "/" + directoryName + "/" + fileName + ".mp3"
+        else:
+            dest = str(self.basePath) + "/" + fileName + ".mp3"
+            
         self.writeFile_jobId = "writeFileJobId_" + str(now.timestamp())
 
         try:

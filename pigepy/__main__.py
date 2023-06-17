@@ -27,7 +27,7 @@ def main():
     else:
         logging.getLogger('apscheduler').setLevel(logging.ERROR)
 
-    recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize)
+    recorder = Recorder(args.stream, args.basePath, args.interval, args.directoryFormat, args.filenameFormat, args.chunkSize, args.noSubDir)
     
     scheduler.scheduler.add_job(lambda: recorder.writeFile(), id="recorder_writeFile_init", max_instances=2)
 
@@ -40,8 +40,9 @@ def main():
 
     filemanager = FileManager(args.basePath, args.directoryFormat)
 
-    scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), replace_existing=True, id="create_dir_init")
-    scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), 'interval', **args.interval, replace_existing=True, id="create_dir")
+    if not args.noSubDir:
+        scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), replace_existing=True, id="create_dir_init")
+        scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), 'interval', **args.interval, replace_existing=True, id="create_dir")
 
     if args.healthcheckUrl:
         from healthcheck import Healthcheck

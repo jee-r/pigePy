@@ -19,6 +19,7 @@ class Config:
         self.basePath = self.parser.add_argument('--base-path', '-b', dest="basePath", required=True, type=self.verify_dir, help='Base destination directory absolute path.')
         self.dirFormat = self.parser.add_argument('--directory-format', '-df', dest="directoryFormat", default='%Y/%m/%d', help='sub directories structure in strftime format (default: "%%Y/%%m/%%d")')
         self.fileFormat = self.parser.add_argument('--file-format', '-ff', dest="filenameFormat", default="%Hh-%Mm-%Ss", help='filename format can contain strftime format (default: "%%Hh-%%Mm-%%Ss")')
+        self.noSubDir = self.parser.add_argument('--no-subdir', '-ns', dest="noSubDir", action='store_true', help='Don\'t Create a subdir based on directory format')
         self.interval = self.parser.add_argument('--interval', '-i', dest="interval", default={"minutes": 60}, type=self.interval_validation, help='Audio files length kwargs format (default: {"minutes": 60})')
         self.alignToHour = self.parser.add_argument('--align-hour', dest="alignHour", action='store_true', help='automatcally align next record to hour hh:00:00')
         self.alignToMinute = self.parser.add_argument('--align-minute', dest="alignMinute", action='store_true', help='automatcally align next record to hour hh:mm:00')
