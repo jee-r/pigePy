@@ -11,9 +11,8 @@ COPY . /app
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY entrypoint.sh .
-
 WORKDIR /app
 
 STOPSIGNAL SIGQUIT
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["python3", "/app/pigepy"]
+CMD ["--help"]
