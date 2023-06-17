@@ -45,6 +45,19 @@ services:
     volumes: 
       - storagebox_pige:/data
       - /etc/localtime:/etc/localtime:ro
+    command: >
+      --stream https://my_radio.eu/stream.mp3
+      --base-path /data/
+      --interval "{'minutes': 1}"
+      --file-format "%Y-%m-%d_%Hh-%Mm-%Ss" 
+      --directory-format "%Y-%m"
+      --align-minute
+      --no-subdir
+      --timezone Europe/Paris
+      --chunk-size 512
+      --log-level info
+      --healthcheck-url https://healthcheck.io/ping/Erl8iLe5lZYoGF-JGYRGeQ/main
+      --heathcheck-interval "{'minutes': 10}"
 
 volumes:
   storagebox_pige:
