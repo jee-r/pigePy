@@ -35,7 +35,18 @@ class TestArgs(unittest.TestCase):
     def test_check_chunkSize(self):
         self.assertEqual(50, self.config.check_chunkSize(50))
         with self.assertRaises(Exception): self.config.check_chunkSize("aString")
-
+    
+    def test_check_prune_value(self):
+        self.assertEqual(50, self.config.check_prune_value(50))
+        with self.assertRaises(Exception): self.config.check_prune_value("aString")
+    
+    def test_check_cron_syntax(self):
+        self.assertEqual("0 0 * * *", self.config.check_cron_syntax("0 0 * * *"))
+        with self.assertRaises(Exception): self.config.check_cron_syntax(50)
+        with self.assertRaises(Exception): self.config.check_cron_syntax("{'years': 5}")
+        with self.assertRaises(Exception): self.config.check_cron_syntax({})
+        with self.assertRaises(Exception): self.config.check_cron_syntax("thisIsAString")
+        with self.assertRaises(Exception): self.config.check_cron_syntax("/this/path/dont/exist")
 
 if __name__ == '__main__':
     unittest.main()

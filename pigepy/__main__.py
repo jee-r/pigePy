@@ -43,7 +43,12 @@ def main():
     if not args.noSubDir:
         scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), replace_existing=True, id="create_dir_init")
         scheduler.scheduler.add_job(lambda: filemanager.createDir(args.directoryDelta), 'interval', **args.interval, replace_existing=True, id="create_dir")
-
+    
+    if args.prune:
+        noSubDir = args.noSubDir if hasattr(args, 'noSubDir') else False
+        scheduler.scheduler.add_job(lambda: filemanager.prune_old_files(args.directoryFormat, args.filenameFormat, noSubDir, args.pruneRetention), replace_existing=True, id="prune_init")
+        scheduler.scheduler.add_job(lambda: filemanager.prune_old_files(args.directoryFormat, args.filenameFormat, noSubDir, args.pruneRetention), 'interval', **args.pruneInterval, replace_existing=True, id="prune")
+        
     if args.healthcheckUrl:
         from healthcheck import Healthcheck
         healthcheck = Healthcheck(args.healthcheckUrl)
