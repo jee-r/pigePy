@@ -15,7 +15,6 @@ First you need clone the project
 
 ```
 git clone https://github.com/jee-r/pigePy.git
-
 ```
 
 ### VirtualEnv (recommended)
@@ -56,7 +55,7 @@ services:
       --timezone Europe/Paris
       --chunk-size 512
       --log-level info
-      --healthcheck-url https://healthcheck.io/ping/Erl8iLe5lZYoGF-JGYRGeQ/main
+      --healthcheck-url https://healthcheck.io/ping/example_token
       --heathcheck-interval "{'minutes': 10}"
 
 volumes:
@@ -120,7 +119,7 @@ options:
                         healthcheck interval (aka ping interval) kwargs format (default: {"minutes": 10})
   --log-level LOGLEVEL  Set loggin output level (possible values DEBUG,INFO,WARNING,CRITICAL default: INFO)
 ```
-### Limitation 
+### Limitations 
 
 - The --directory-format (-df) argument allows you to specify the subdirectory structure using the strftime format. However, it does not support the use of the same format specifier multiple times. For example, if the directory format is set to "%Y/%m/%d", the --file-format (-ff) argument cannotinclude the format specifiers %Y, %m, or %d. **Ensure that the file format does not contain the same format specifiers as the directory format** to avoid conflicts and unintended behavior.
 
