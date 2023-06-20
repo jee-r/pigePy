@@ -5,7 +5,7 @@
 import configparser, argparse
 from pathlib import Path
 from ast import literal_eval
-
+import re
 
 class Config:
     """
@@ -20,6 +20,9 @@ class Config:
         self.dirFormat = self.parser.add_argument('--directory-format', '-df', dest="directoryFormat", default='%Y/%m/%d', help='sub directories structure in strftime format (default: "%%Y/%%m/%%d")')
         self.fileFormat = self.parser.add_argument('--file-format', '-ff', dest="filenameFormat", default="%Hh-%Mm-%Ss", help='filename format can contain strftime format (default: "%%Hh-%%Mm-%%Ss")')
         self.noSubDir = self.parser.add_argument('--no-subdir', '-ns', dest="noSubDir", action='store_true', help='Don\'t Create a subdir based on directory format')
+        self.prune = self.parser.add_argument('--prune', dest="prune", action='store_true', help='Remove old files and directories in days (default: False)')
+        self.prune_retention = self.parser.add_argument('--prune-retention', '--retention', dest="pruneRetention", default={"days": 90}, type=self.interval_validation, help='prune retention (aka how many files keep) in kwargs format (default: {"days": 90})')
+        self.prune_interval = self.parser.add_argument('--prune-interval', dest="pruneInterval", default={"days": 1}, type=self.interval_validation, help='prune interval in kwargs format {"days": int, "hours": int, "minutes": int} (default: {"days": 1})')
         self.interval = self.parser.add_argument('--interval', '-i', dest="interval", default={"minutes": 60}, type=self.interval_validation, help='Audio files length kwargs format (default: {"minutes": 60})')
         self.alignToHour = self.parser.add_argument('--align-hour', dest="alignHour", action='store_true', help='automatcally align next record to hour hh:00:00')
         self.alignToMinute = self.parser.add_argument('--align-minute', dest="alignMinute", action='store_true', help='automatcally align next record to hour hh:mm:00')
@@ -87,3 +90,26 @@ class Config:
             # logging.exception('Chunk size must be a positive integer.')
         else:
             return value
+
+    def check_prune_value(self, value):
+        try:
+            value = int(value) 
+        except ValueError:
+            raise argparse.ArgumentTypeError(
+                'Prune value must be a positive integer.')
+            # logging.exception('Chunk size must be a positive integer.')
+        if value < 1:
+            raise argparse.ArgumentTypeError(
+                'Prune value must be a positive integer.')
+            # logging.exception('Chunk size must be a positive integer.')
+        else:
+            return value
+
+    def check_cron_syntax(self, value):
+        pattern = r'^(\*|\d{1,2}|\*/\d{1,2})( (\*|\d{1,2}|\*/\d{1,2})){4}$'
+        try:
+            if not re.match(pattern, value):
+                raise ValueError
+        except ValueError:
+            raise argparse.ArgumentTypeError('Error in crontab syntax')
+        return value
