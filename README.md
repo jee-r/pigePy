@@ -1,8 +1,8 @@
 # pigePy
 
-[pigePy](https://jeer.fr/projects/pigePy) is a python script whose purpose is to record one audio stream per segment.
+pigePy is a python script whose purpose is to record one audio stream per segment.
 
-I wrote this script voluntarily for [Radio Quetsch](https://radio-quetsch.eu),   
+I wrote this script voluntarily for [Radio Quetsch](https://radio-quetsch.eu).
 
 ## Requirements
 
@@ -27,7 +27,6 @@ pip install -r requirements.txt
 ```
 
 ### Docker
-
 
 `docker-compose`
 
@@ -66,12 +65,7 @@ volumes:
       allow_other: 'true'
       vfs_cache_mode: full
       poll_interval: 0
-
 ```
-
-
-### Kubernetes
-TODO
 
 ## Usage
 
@@ -130,10 +124,8 @@ options:
 - [x] Dockerfile and docker-compose
 - [ ] github CI
 
-## Contribution
-
 ## License
 
-## Credit
+
 
 
