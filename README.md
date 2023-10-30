@@ -67,6 +67,8 @@ volumes:
       poll_interval: 0
 ```
 
+For more details about Rclone Docker Volume Plugin see [rclone official doc](https://rclone.org/docker/)
+
 ## Usage
 
 ```
